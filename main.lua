@@ -14,13 +14,6 @@ function loadMap(map)
 	currMap = map.layers[1].data
 	roomWidth = map.width
 	roomHeight = map.height
---	for x = 0, 24 do		
---		for y = 0, 14 do
---			if GetMapPiece(x,y) ==10 then
---				SelectPiece(x,y)
---			end
---		end
---	end
 end
 
 function SelectPiece(x,y)
@@ -49,7 +42,7 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 	elseif CanHorseMoveToPos( GridPosX,GridPosY,
 		selectedPiece.x ,selectedPiece.y ,currMap) then
 		print(GridPosY)
-		print(selectedPiece.x)
+		print(selectedPiece.y)
 		SetMapPiece(selectedPiece.x,selectedPiece.y,0)
 		SetMapPiece(GridPosX,GridPosY,10)
 		selectedPiece.x = GridPosX
@@ -112,7 +105,7 @@ function CanHorseMoveToPos(posX,posY,horseX,horseY,map)
 	local dist
 	if GetMapPiece(posX,posY) ~= nil and GetMapPiece(posX,posY) > 0 then
 
-		if x ~= horseX then
+		if posX ~= horseX and posY ~= horseY then
 			dist = math.abs( posX-horseX)
 			dist = dist + math.abs( posY-horseY)
 			if(dist == 3) then
