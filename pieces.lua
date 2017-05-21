@@ -32,16 +32,39 @@ function MovePieceToPos(piece,x,y)
 	piece.y = y
 end
 
-function CanWhitePieceMoveToPos(posX,posY)
+function CanPieceMoveToPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
 
-	return goalPiece ~= nil and IsNotEmptySpace(posX,posY) and not IsWhitePiece(goalPiece)
+	return goalPiece ~= nil and IsNotEmptySpace(posX,posY)
 end
+
+function CanPieceMoveToPos(posX,posY,isWhite)
+	if isWhite then
+		CanWhitePieceMoveToPos(posX,posY)
+	else
+		CanBlackPieceMoveToPos(posX,posY)
+	end
+end
+
+function CanWhitePieceMoveToPos(posX,posY)
+	local goalPiece = GetMapPiece(posX,posY)
+	return CanPieceMoveToPos(posX,posY) and not IsWhitePiece(goalPiece)
+end
+
+function CanBlackPieceMoveToPos(posX,posY)
+	local goalPiece = GetMapPiece(posX,posY)
+
+	return CanPieceMoveToPos(posX,posY) and not IsBlackPiece(goalPiece)
+end
+
+
 
 function CanHorseMoveToPos(posX,posY,horseX,horseY,isWhite)
 	local dist
 
-	if CanWhitePieceMoveToPos(posX,posY) then
+
+	if CanPieceMoveToPos(posX,posY,isWhite) then
+
 		if posX ~= horseX and posY ~= horseY then
 			dist = math.abs( posX-horseX)
 			dist = dist + math.abs( posY-horseY)
@@ -54,7 +77,7 @@ function CanHorseMoveToPos(posX,posY,horseX,horseY,isWhite)
 end
 
 function CanKingMoveToPos(posX,posY,kingX,kingY,isWhite)
-	if CanWhitePieceMoveToPos(posX,posY) then
+	if CanPieceMoveToPos(posX,posY,isWhite) then
 		if math.abs(posX-kingX) <2 and math.abs(posY-kingY) <2 then
 			return true
 		end
@@ -63,23 +86,59 @@ function CanKingMoveToPos(posX,posY,kingX,kingY,isWhite)
 end
 
 function CanRookMoveToPos(posX,posY,kingX,kingY,isWhite)
-	if CanWhitePieceMoveToPos(posX,posY) then
-		if math.abs(posX-kingX) <2 then
-			if math.abs(posY-kingY) <2 then 
+	if CanPieceMoveToPos(posX,posY,isWhite) then
+		if posX == kingX then
+			local xStart, xEnd
+
+			if math.abs(posX -kingX) < 2 then
 				return true
 			end
+			if posX < kingX then
+				xCheck = posX+1
+				xEnd = kingX-1
+			else
+				xCheck = kingX
+				xEnd = posX-1
+			end
+			for x=xStart,xEnd do
+				if not CanPieceMoveToPos(x,posY) then
+					return false
+				end
+			end
+			return true
+		elseif posY == kingY then
+			local yStart, yEnd
+
+			if math.abs(posY -kingY) < 2 then
+				return true
+			end
+			if posY < kingY then
+				yCheck = posY+1
+				yEnd = kingY-1
+			else
+				yCheck = kingY
+				yEnd = posY-1
+			end
+			for y=yStart,yEnd do
+				if not CanPieceMoveToPos(posX,y) then
+					return false
+				end
+			end
+			return true
 		end
 	end
 	return false
 end
 
 function CanBishopMoveToPos(posX,posY,kingX,kingY,isWhite)
-	if CanWhitePieceMoveToPos(posX,posY) then
-		if math.abs(posX-kingX) <2 then
-			if math.abs(posY-kingY) <2 then 
-				return true
-			end
+	if CanPieceMoveToPos(posX,posY,isWhite) then
+		local xDist = posX - kingX
+		local yDist = posY - kingY
+		if math.abs(xDist) == math.abs(yDist) then
+			return true
 		end
+		
+
 	end
 	return false
 end
@@ -91,12 +150,11 @@ function CanQueenMoveToPos(posX,posY,kingX,kingY,isWhite)
 	return false
 end
 
+-- UNFINISHED
 function CanPawnMoveToPos(posX,posY,kingX,kingY,isWhite)
 	if CanWhitePieceMoveToPos(posX,posY) then
-		if math.abs(posX-kingX) <2 then
-			if math.abs(posY-kingY) <2 then 
-				return true
-			end
+		if posX == kingX and kingY+1 == posY then
+			return true
 		end
 	end
 	return false
