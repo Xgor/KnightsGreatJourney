@@ -38,6 +38,7 @@ function CanPieceMoveToPos(posX,posY)
 	return goalPiece ~= nil and IsNotEmptySpace(posX,posY)
 end
 
+
 function CanPieceMoveToPos(posX,posY,isWhite)
 	if isWhite then
 		CanWhitePieceMoveToPos(posX,posY)
@@ -85,19 +86,19 @@ function CanKingMoveToPos(posX,posY,kingX,kingY,isWhite)
 	return false
 end
 
-function CanRookMoveToPos(posX,posY,kingX,kingY,isWhite)
+function CanRookMoveToPos(posX,posY,piecegX,pieceY,isWhite)
 	if CanPieceMoveToPos(posX,posY,isWhite) then
-		if posX == kingX then
+		if posX == pieceX then
 			local xStart, xEnd
 
-			if math.abs(posX -kingX) < 2 then
+			if math.abs(posX -pieceX) < 2 then
 				return true
 			end
 			if posX < kingX then
 				xCheck = posX+1
-				xEnd = kingX-1
+				xEnd = pieceX-1
 			else
-				xCheck = kingX
+				xCheck = pieceX
 				xEnd = posX-1
 			end
 			for x=xStart,xEnd do
@@ -106,17 +107,17 @@ function CanRookMoveToPos(posX,posY,kingX,kingY,isWhite)
 				end
 			end
 			return true
-		elseif posY == kingY then
+		elseif posY == pieceY then
 			local yStart, yEnd
 
-			if math.abs(posY -kingY) < 2 then
+			if math.abs(posY -pieceY) < 2 then
 				return true
 			end
 			if posY < kingY then
 				yCheck = posY+1
-				yEnd = kingY-1
+				yEnd = pieceY-1
 			else
-				yCheck = kingY
+				yCheck = pieceY
 				yEnd = posY-1
 			end
 			for y=yStart,yEnd do
@@ -130,30 +131,40 @@ function CanRookMoveToPos(posX,posY,kingX,kingY,isWhite)
 	return false
 end
 
-function CanBishopMoveToPos(posX,posY,kingX,kingY,isWhite)
+function CanBishopMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	if CanPieceMoveToPos(posX,posY,isWhite) then
-		local xDist = posX - kingX
-		local yDist = posY - kingY
+		local xDist = posX - pieceX
+		local yDist = posY - pieceY
+
 		if math.abs(xDist) == math.abs(yDist) then
+			if xDist == 1 then
+				return true
+			end
+			local xDir,yDir
+			if xDist > 0 then xDir = 1 else xDir 2 end
+			if yDist > 0 then yDir = 1 else yDir 2 end
+			for i = 1,xDist-1 do
+				if not CanPieceMoveToPos(pieceX+i*xDir,pieceY+i*yDir) then
+					return false
+				end 
+			end
 			return true
 		end
-		
-
 	end
 	return false
 end
 
-function CanQueenMoveToPos(posX,posY,kingX,kingY,isWhite)
-	if CanRookMoveToPos(posX,posY,kingX,kingY,isWhite) or CanBishopMoveToPos(posX,posY,kingX,kingY,isWhite) then
+function CanQueenMoveToPos(posX,posY,pieceX,pieceY,isWhite)
+	if CanRookMoveToPos(posX,posY,pieceX,pieceY,isWhite) or CanBishopMoveToPos(posX,posY,pieceX,pieceY,isWhite) then
 		return true
 	end
 	return false
 end
 
 -- UNFINISHED
-function CanPawnMoveToPos(posX,posY,kingX,kingY,isWhite)
+function CanPawnMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	if CanWhitePieceMoveToPos(posX,posY) then
-		if posX == kingX and kingY+1 == posY then
+		if posX == pieceX and pieceY+1 == posY then
 			return true
 		end
 	end
