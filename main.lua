@@ -1,11 +1,16 @@
-
+require "pieces"
 local testMap = require "testMap"
 
-local selectedPiece 
+Color_Chess1 = {245,222,179, 255}
+Color_Chess2 = {210,105,30, 255}
+Color_Highlight = {255,0,255,155}
+
+--local selectedPiece 
 local tileset
 function love.load()
 	tileset = love.graphics.newImage("gfx/Tileset.png")
-	horseQuad = love.graphics.newQuad(96, 32, 32, 32, tileset:getDimensions())
+	whiteHorse = love.graphics.newQuad(96, 32, 32, 32, tileset:getDimensions())
+	whiteKing = love.graphics.newQuad(0, 32, 32, 32, tileset:getDimensions())
 	-- Load map
 	loadMap(testMap)
 end
@@ -17,7 +22,7 @@ function loadMap(map)
 end
 
 function SelectPiece(x,y)
-	if GetMapPiece(x,y) >6 and GetMapPiece(x,y) <13 then
+	if IsWhitePiece(GetMapPiece(x,y)) then
 		selectedPiece = {}
 		selectedPiece.type = GetMapPiece(x,y) 
 		selectedPiece.x =x
@@ -39,16 +44,25 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 	local GridPosY = math.floor(mouseY/32)
 	if selectedPiece == nil then
 		SelectPiece(GridPosX,GridPosY)
-	elseif CanHorseMoveToPos( GridPosX,GridPosY,
-		selectedPiece.x ,selectedPiece.y ,currMap) then
-		print(GridPosY)
-		print(selectedPiece.y)
-		SetMapPiece(selectedPiece.x,selectedPiece.y,0)
-		SetMapPiece(GridPosX,GridPosY,10)
-		selectedPiece.x = GridPosX
-		selectedPiece.y = GridPosY
-	else
-		selectedPiece = nil 
+	else 
+		if selectedPiece.type == PIECE_WHITE_KNIGHT then 
+			if CanHorseMoveToPos( GridPosX,GridPosY,
+			selectedPiece.x ,selectedPiece.y ,currMap) then
+				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+			else
+				selectedPiece = nil 
+			end
+		elseif selectedPiece.type == PIECE_WHITE_KING then 
+			if CanKingMoveToPos( GridPosX,GridPosY,
+				selectedPiece.x ,selectedPiece.y ,currMap) then
+				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+			else
+				selectedPiece = nil 
+			end
+		else
+			selectedPiece = nil 
+		end
+
 	end
 end
 
@@ -65,27 +79,38 @@ function love.draw()
 
 	for x = 0, roomWidth-1 do
 		for y = 0, roomHeight-1 do
-			if(GetMapPiece(x,y)>0) then
+
+			if(IsNotEmptySpace(x,y)) then
 				if((x+y)%2 > 0) then
-					love.graphics.setColor(0,0,0)
+					love.graphics.setColor(Color_Chess1)
 				else
-					love.graphics.setColor(255,255,255)
+					love.graphics.setColor(Color_Chess2)
 				end
 
 				love.graphics.rectangle("fill", x*32, y*32, 32, 32)
 				if GetMapPiece(x,y)==3 then
 					love.graphics.setColor(0,100,255)
 					love.graphics.circle("fill", 16+x*32, 16+y*32, 10)
-				elseif GetMapPiece(x,y)==10 then
+				elseif GetMapPiece(x,y)==PIECE_WHITE_KING then
 					love.graphics.setColor(255,255,255)
-					love.graphics.draw(tileset,horseQuad,x*32,y*32)
+					love.graphics.draw(tileset,whiteKing,x*32,y*32)
+				elseif GetMapPiece(x,y)==PIECE_WHITE_KNIGHT then
+					love.graphics.setColor(255,255,255)
+					love.graphics.draw(tileset,whiteHorse,x*32,y*32)
 
 --					love.graphics.circle("fill", 16+x*32, 16+y*32, 10)
 				end
 				if selectedPiece ~= nil then
-					if CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
-						love.graphics.setColor(255,255,0,122)
-						love.graphics.rectangle("fill", x*32, y*32, 32, 32)
+					if selectedPiece.type == PIECE_WHITE_KNIGHT then 
+						if CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
+							love.graphics.setColor(Color_Highlight)
+							love.graphics.rectangle("fill", x*32, y*32, 32, 32)
+						end
+					elseif selectedPiece.type == PIECE_WHITE_KING then 
+						if CanKingMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
+							love.graphics.setColor(Color_Highlight)
+							love.graphics.rectangle("fill", x*32, y*32, 32, 32)
+						end
 					end
 				end
 			end
@@ -99,19 +124,4 @@ function love.draw()
 	end
 	love.graphics.print(math.floor(mouseX/32),10,40)
 	love.graphics.print(math.floor(mouseY/32),30,40)
-end
-
-function CanHorseMoveToPos(posX,posY,horseX,horseY,map)
-	local dist
-	if GetMapPiece(posX,posY) ~= nil and GetMapPiece(posX,posY) > 0 then
-
-		if posX ~= horseX and posY ~= horseY then
-			dist = math.abs( posX-horseX)
-			dist = dist + math.abs( posY-horseY)
-			if(dist == 3) then
-				return true
-			end
-		end
-	end
-	return false
 end
