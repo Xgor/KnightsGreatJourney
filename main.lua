@@ -59,6 +59,34 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 			else
 				selectedPiece = nil 
 			end
+		elseif selectedPiece.type == PIECE_WHITE_QUEEN then 
+			if CanQueenMoveToPos( GridPosX,GridPosY,
+				selectedPiece.x ,selectedPiece.y ,currMap) then
+				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+			else
+				selectedPiece = nil 
+			end
+		elseif selectedPiece.type == PIECE_WHITE_BISHOP then 
+			if CanBishopMoveToPos( GridPosX,GridPosY,
+				selectedPiece.x ,selectedPiece.y ,currMap) then
+				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+			else
+				selectedPiece = nil 
+			end
+		elseif selectedPiece.type == PIECE_WHITE_ROOK then 
+			if CanRookMoveToPos( GridPosX,GridPosY,
+				selectedPiece.x ,selectedPiece.y ,currMap) then
+				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+			else
+				selectedPiece = nil 
+			end
+		elseif selectedPiece.type == PIECE_WHITE_PAWN then 
+			if CanPawnMoveToPos( GridPosX,GridPosY,
+				selectedPiece.x ,selectedPiece.y ,currMap) then
+				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+			else
+				selectedPiece = nil 
+			end
 		else
 			selectedPiece = nil 
 		end
@@ -87,31 +115,47 @@ function love.draw()
 					love.graphics.setColor(Color_Chess2)
 				end
 
+				local piece = GetMapPiece(x,y)
+
 				love.graphics.rectangle("fill", x*32, y*32, 32, 32)
-				if GetMapPiece(x,y)==3 then
+				if piece==2 then
 					love.graphics.setColor(0,100,255)
 					love.graphics.circle("fill", 16+x*32, 16+y*32, 10)
-				elseif GetMapPiece(x,y)==PIECE_WHITE_KING then
+				elseif piece > 2 then
 					love.graphics.setColor(255,255,255)
-					love.graphics.draw(tileset,whiteKing,x*32,y*32)
-				elseif GetMapPiece(x,y)==PIECE_WHITE_KNIGHT then
-					love.graphics.setColor(255,255,255)
-					love.graphics.draw(tileset,whiteHorse,x*32,y*32)
-
---					love.graphics.circle("fill", 16+x*32, 16+y*32, 10)
+--					love.graphics.newQuad(0, 32, 32, 32, tileset:getDimensions())
+					local drawQuad =love.graphics.newQuad(((piece-1)%6)*32, math.floor((piece-1)/6)*32, 32, 32, tileset:getDimensions())
+					love.graphics.draw(tileset,drawQuad,x*32,y*32)
 				end
+
 				if selectedPiece ~= nil then
 					if selectedPiece.type == PIECE_WHITE_KNIGHT then 
 						if CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
-							love.graphics.setColor(Color_Highlight)
-							love.graphics.rectangle("fill", x*32, y*32, 32, 32)
+							DrawHighlight(x,y)
 						end
 					elseif selectedPiece.type == PIECE_WHITE_KING then 
 						if CanKingMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
-							love.graphics.setColor(Color_Highlight)
-							love.graphics.rectangle("fill", x*32, y*32, 32, 32)
+							DrawHighlight(x,y)
+						end
+					elseif selectedPiece.type == PIECE_WHITE_QUEEN then 
+						if CanQueenMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
+							DrawHighlight(x,y)
+						end
+					elseif selectedPiece.type == PIECE_WHITE_BISHOP then 
+						if CanBishopMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
+							DrawHighlight(x,y)
+						end
+					elseif selectedPiece.type == PIECE_WHITE_ROOK then 
+						if CanRookMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
+							DrawHighlight(x,y)
+						end
+					elseif selectedPiece.type == PIECE_WHITE_PAWN then 
+						if CanPawnMoveToPos(x,y,selectedPiece.x,selectedPiece.y,currMap) then
+							DrawHighlight(x,y)
 						end
 					end
+
+
 				end
 			end
 		end
@@ -124,4 +168,9 @@ function love.draw()
 	end
 	love.graphics.print(math.floor(mouseX/32),10,40)
 	love.graphics.print(math.floor(mouseY/32),30,40)
+end
+
+function DrawHighlight(xPos,yPos) 
+	love.graphics.setColor(Color_Highlight)
+	love.graphics.rectangle("fill", xPos*32, yPos*32, 32, 32)
 end

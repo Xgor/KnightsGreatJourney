@@ -32,30 +32,36 @@ function MovePieceToPos(piece,x,y)
 	piece.y = y
 end
 
-function CanPieceMoveToPos(posX,posY)
+function CanPiecePassThroughPos(posX,posY)
+	local goalPiece = GetMapPiece(posX,posY)
+
+	return goalPiece ~= nil and goalPiece>0 and goalPiece< PIECE_WHITE_KING
+end
+
+function CanPieceMoveToPos(posX,posY,isWhite)
+	
+	if isWhite then
+		return CanWhitePieceMoveToPos(posX,posY)
+	else
+		return CanBlackPieceMoveToPos(posX,posY)
+	end
+end
+
+function CanMoveToPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
 
 	return goalPiece ~= nil and IsNotEmptySpace(posX,posY)
 end
 
-
-function CanPieceMoveToPos(posX,posY,isWhite)
-	if isWhite then
-		CanWhitePieceMoveToPos(posX,posY)
-	else
-		CanBlackPieceMoveToPos(posX,posY)
-	end
-end
-
 function CanWhitePieceMoveToPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
-	return CanPieceMoveToPos(posX,posY) and not IsWhitePiece(goalPiece)
+	return CanMoveToPos(posX,posY) and not IsWhitePiece(goalPiece)
 end
 
 function CanBlackPieceMoveToPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
 
-	return CanPieceMoveToPos(posX,posY) and not IsBlackPiece(goalPiece)
+	return CanMoveToPos(posX,posY) and not IsBlackPiece(goalPiece)
 end
 
 
@@ -63,7 +69,7 @@ end
 function CanHorseMoveToPos(posX,posY,horseX,horseY,isWhite)
 	local dist
 
-
+	
 	if CanPieceMoveToPos(posX,posY,isWhite) then
 
 		if posX ~= horseX and posY ~= horseY then
@@ -86,47 +92,52 @@ function CanKingMoveToPos(posX,posY,kingX,kingY,isWhite)
 	return false
 end
 
-function CanRookMoveToPos(posX,posY,piecegX,pieceY,isWhite)
-	if CanPieceMoveToPos(posX,posY,isWhite) then
-		if posX == pieceX then
-			local xStart, xEnd
+function CanRookMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 
+	if CanPieceMoveToPos(posX,posY,isWhite) then
+
+		if posY == pieceY then
+			local xStart, xEnd
+			
 			if math.abs(posX -pieceX) < 2 then
 				return true
 			end
-			if posX < kingX then
-				xCheck = posX+1
+			if posX < pieceX then
+				xStart = posX+1
 				xEnd = pieceX-1
 			else
-				xCheck = pieceX
+				xStart = pieceX+1
 				xEnd = posX-1
 			end
 			for x=xStart,xEnd do
-				if not CanPieceMoveToPos(x,posY) then
+				if not CanPiecePassThroughPos(x,posY) then
 					return false
 				end
 			end
 			return true
-		elseif posY == pieceY then
+		elseif posX == pieceX then
+			
 			local yStart, yEnd
 
 			if math.abs(posY -pieceY) < 2 then
 				return true
 			end
-			if posY < kingY then
-				yCheck = posY+1
+
+			if posY < pieceY then
+				yStart = posY+1
 				yEnd = pieceY-1
 			else
-				yCheck = pieceY
+				yStart = pieceY+1
 				yEnd = posY-1
 			end
 			for y=yStart,yEnd do
-				if not CanPieceMoveToPos(posX,y) then
+				if not CanPiecePassThroughPos(posX,y) then
 					return false
 				end
 			end
 			return true
 		end
+	--	print("...")
 	end
 	return false
 end
@@ -141,10 +152,10 @@ function CanBishopMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 				return true
 			end
 			local xDir,yDir
-			if xDist > 0 then xDir = 1 else xDir 2 end
-			if yDist > 0 then yDir = 1 else yDir 2 end
+			if xDist > 0 then xDir = 1 else xDir = -1 end
+			if yDist > 0 then yDir = 1 else yDir = -1 end
 			for i = 1,xDist-1 do
-				if not CanPieceMoveToPos(pieceX+i*xDir,pieceY+i*yDir) then
+				if not CanPiecePassThroughPos(pieceX+i*xDir,pieceY+i*yDir) then
 					return false
 				end 
 			end
@@ -163,8 +174,8 @@ end
 
 -- UNFINISHED
 function CanPawnMoveToPos(posX,posY,pieceX,pieceY,isWhite)
-	if CanWhitePieceMoveToPos(posX,posY) then
-		if posX == pieceX and pieceY+1 == posY then
+	if CanPiecePassThroughPos(posX,posY) then
+		if posX == pieceX and pieceY-1 == posY then
 			return true
 		end
 	end
