@@ -25,13 +25,6 @@ function IsNotEmptySpace(x,y)
 	return GetMapPiece(x,y) > 0
 end
 
-function MovePieceToPos(piece,x,y)
-	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
-	SetMapPiece(x,y,piece.type)
-	piece.x = x
-	piece.y = y
-end
-
 function CanPiecePassThroughPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
 
