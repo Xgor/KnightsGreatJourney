@@ -20,6 +20,7 @@ function DidPlayerCompleteLevel()
 end
 
 function EndLevel()
+	selectedPiece = nil
 	currLevel = currLevel+1
 	if currLevel == 2 then loadMap(testMap2) 
 	elseif currLevel == 3 then loadMap(testMap3)
@@ -99,22 +100,36 @@ end
 function PlayerMovePieceToPos(piece,x,y)
 	NewField()
 	mapIndex = mapIndex+1
-	SetMapPiece(x,y,piece.type)
-	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
-	selectedPiece.x = x
-	selectedPiece.y = y
-
+	local movedPiece = MovePieceToPos(piece.type,piece.x,piece.y,x,y)
 	if DidPlayerCompleteLevel() then
 		EndLevel()
 	end
+	return movedPiece
 --	EnemyTurn()
 end
 
-function MovePieceToPos(piece,x,y)
-	SetMapPiece(x,y,piece.type)
-	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
-	selectedPiece.x = x
-	selectedPiece.y = y
+function MovePieceToPos(pieceType,oldX,oldY,newX,newY)
+	local formerPiece = GetMapPiece(newX,newY)
+	local movingPiece = {}
+	SetMapPiece(newX,newY,pieceType)
+	SetMapPiece(oldX,oldY,0)
+	movingPiece.x = newX
+	movingPiece.y = newY
+	movingPiece.type = pieceType
+
+	if IsConveyorPiece(formerPiece) then
+
+		movingPiece =ConveyorBelt(formerPiece,pieceType,newX,newY)
+	end
+	return movingPiece
+end
+
+function ConveyorBelt(conveyorPiece,piece,x,y)
+
+	if conveyorPiece == PIECE_ARROW_UP then return MovePieceToPos(piece,x,y,x,y-1) 
+	elseif conveyorPiece == PIECE_ARROW_RIGHT then return MovePieceToPos(piece,x,y,x+1,y) 
+	elseif conveyorPiece == PIECE_ARROW_DOWN then return MovePieceToPos(piece,x,y,x,y+1) 
+	elseif conveyorPiece == PIECE_ARROW_LEFT then return MovePieceToPos(piece,x,y,x-1,y) end
 end
 
 function DrawHighlight(xPos,yPos, color) 
@@ -122,21 +137,28 @@ function DrawHighlight(xPos,yPos, color)
 	love.graphics.rectangle("fill", xPos*32, yPos*32, 32, 32)
 end
 
+function IsNotEmptySpace(x,y)
+
+	return GetMapPiece(x,y) > 0
+end
 
 function Undo()
 	if mapIndex > 0 then
+		selectedPiece = nil
 		mapIndex = mapIndex-1
 	end
 end
 
 function Redo()
 	if mapEndIndex > mapIndex then
+		selectedPiece = nil
 		mapIndex = mapIndex+1
 	end
 end
 
 
 function Reset()
+	selectedPiece = nil
 	mapIndex = 0
 end
 
@@ -209,6 +231,4 @@ function DrawMap(map)
 			end
 		end
 	end
-
-
 end

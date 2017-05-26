@@ -33,14 +33,14 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 		if selectedPiece.type == PIECE_WHITE_KNIGHT then 
 			if CanHorseMoveToPos( GridPosX,GridPosY,
 			selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				selectedPiece = PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil 
 			end
 		elseif selectedPiece.type == PIECE_WHITE_KING then 
 			if CanKingMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				selectedPiece = PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil 
 			end
@@ -54,21 +54,21 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 		elseif selectedPiece.type == PIECE_WHITE_BISHOP then 
 			if CanBishopMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				selectedPiece = PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil
 			end
 		elseif selectedPiece.type == PIECE_WHITE_ROOK then 
 			if CanRookMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				selectedPiece = PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil
 			end
 		elseif selectedPiece.type == PIECE_WHITE_PAWN then 
 			if CanPawnMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				selectedPiece = PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil
 			end
@@ -112,4 +112,3 @@ function love.draw()
 	end
 	
 end
-

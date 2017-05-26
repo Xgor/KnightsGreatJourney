@@ -16,6 +16,9 @@ PIECE_BLACK_KNIGHT = 16
 PIECE_BLACK_ROOK = 17
 PIECE_BLACK_PAWN = 18
 
+function IsConveyorPiece(piece)
+	return piece >= PIECE_ARROW_UP and piece < PIECE_WHITE_KING
+end
 
 function IsWhitePiece(piece)
 	return piece >= PIECE_WHITE_KING and piece < PIECE_BLACK_KING
@@ -25,9 +28,7 @@ function IsBlackPiece(piece)
 	return PIECE_BLACK_KING <= piece
 end
 
-function IsNotEmptySpace(x,y)
-	return GetMapPiece(x,y) > 0
-end
+
 
 function CanPiecePassThroughPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
