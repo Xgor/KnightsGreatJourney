@@ -8,6 +8,21 @@ function loadMap(mapPath)
 	roomHeight = mapPath.height
 end
 
+function DidPlayerCompleteLevel()
+	for x = 0, roomWidth-1 do
+		for y = 0, roomHeight-1 do
+			if GetMapPiece(x,y) == 2 then
+				return false
+			end
+		end
+	end
+	return true
+end
+
+function EndLevel()
+
+end
+
 function GetMapPiece(x,y)
 	return GetCurrMap()[(1+x+y*testMap.width)]
 end
@@ -30,7 +45,7 @@ function SetMapPiece(x,y,piece)
 	GetCurrMap()[(1+x+y*roomWidth)] = piece
 end
 
-function N()
+function NewField()
 	currMap[mapIndex+1] = {}
 	mapEndIndex = mapIndex+1
 	for x = 0, roomWidth-1 do
@@ -40,13 +55,25 @@ function N()
 	end
 end
 
+function EnemyTurn()
+	local currMapPiece
+	for x = 0, roomWidth-1 do
+		for y = 0, roomHeight-1 do
+			currMapPiece = GetMapPiece(x,y)
+			if IsBlackPiece(currMapPiece) then
+
+			end
+		end
+	end
+end
+
 function MovePieceToPos(piece,x,y)
-	N()
+	NewField()
 	mapIndex = mapIndex+1
-	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
 	SetMapPiece(x,y,piece.type)
-	piece.x = x
-	piece.y = y
+	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
+	selectedPiece.x = x
+	selectedPiece.y = y
 end
 
 function DrawHighlight(xPos,yPos, color) 
@@ -120,7 +147,7 @@ function DrawMap(map)
 			--		DrawHighlight(x,y,)
 				end
 
-				if piece==2 then
+				if piece==PIECE_PICKUP then
 					love.graphics.setColor(0,100,255)
 					love.graphics.circle("fill", 16+x*32, 16+y*32, 10)
 				elseif piece > 2 then

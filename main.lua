@@ -1,6 +1,9 @@
 require "pieces"
 require "map"
 testMap = require "testMap"
+testMap2 = require "testMap2"
+testMap3 = require "testMap3"
+testMap4 = require "testMap4"
 
 Color_Background = {0,0,0, 255}
 Color_Chess1 = {245,222,179, 255}
@@ -12,8 +15,6 @@ Color_SelectedPiece = {0,0,0,155}
 local tileset
 function love.load()
 	tileset = love.graphics.newImage("gfx/Tileset.png")
-	whiteHorse = love.graphics.newQuad(96, 32, 32, 32, tileset:getDimensions())
-	whiteKing = love.graphics.newQuad(0, 32, 32, 32, tileset:getDimensions())
 	-- Load map
 	loadMap(testMap)
 end
@@ -71,6 +72,7 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 				selectedPiece = nil
 			end
 		else
+
 			selectedPiece = nil
 		end
 
@@ -99,8 +101,14 @@ function love.draw()
 	DrawMap(currMap)
 	
 	local mouseX,mouseY  = love.mouse.getPosition()
-	love.graphics.setColor(0,0,0)
-	love.graphics.print(mapIndex,30,40)
+	local mouseMapX = math.floor(mouseX/32)
+	local mouseMapY = math.floor(mouseY/32)
+	love.graphics.setColor(255,255,255)
+	if IsBlackPiece( GetMapPiece(mouseMapX,mouseMapY) ) then
+		love.graphics.print("true",30,40)
+	else
+		love.graphics.print("false",30,40)
+	end
 	
 end
 

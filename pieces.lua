@@ -1,3 +1,8 @@
+PIECE_PICKUP = 2
+PIECE_ARROW_UP = 3
+PIECE_ARROW_RIGHT = 4
+PIECE_ARROW_DOWN = 5
+PIECE_ARROW_LEFT = 6
 PIECE_WHITE_KING = 7
 PIECE_WHITE_QUEEN = 8
 PIECE_WHITE_BISHOP = 9
@@ -13,12 +18,11 @@ PIECE_BLACK_PAWN = 18
 
 
 function IsWhitePiece(piece)
-	
 	return piece >= PIECE_WHITE_KING and piece < PIECE_BLACK_KING
 end
 
 function IsBlackPiece(piece)
-	return PIECE_BLACK_KING >= 12
+	return PIECE_BLACK_KING <= piece
 end
 
 function IsNotEmptySpace(x,y)
@@ -137,6 +141,7 @@ end
 
 function CanBishopMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	if CanPieceMoveToPos(posX,posY,isWhite) then
+		
 		local xDist = posX - pieceX
 		local yDist = posY - pieceY
 
@@ -165,18 +170,29 @@ function CanQueenMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	return false
 end
 
--- UNFINISHED
+-- Har inte att man kan hoppa två steg första gången
 function CanPawnMoveToPos(posX,posY,pieceX,pieceY,isWhite)
-	if CanPiecePassThroughPos(posX,posY) then
-		local YDir
-		if isWhite then
-			YDir = pieceY-1
-		else
-			YDir = pieceY+1
-		end
 
-		if posX == pieceX and YDir == posY then
-			return true
+	local YDir
+	if isWhite then
+		YDir = pieceY-1
+	else
+		YDir = pieceY+1
+	end
+	if YDir ~= posY then
+		return false
+	end
+
+	-- Can Walk Foward
+	if posX == pieceX and CanPiecePassThroughPos(posX,posY) then
+		return true
+	end
+	if math.abs(pieceX-posX) == 1 and CanMoveToPos(posX,posY)then
+
+		if isWhite then
+			return IsBlackPiece(GetMapPiece(posX,posY))
+		else
+			return IsWhitePiece(GetMapPiece(posX,posY))
 		end
 	end
 	return false
