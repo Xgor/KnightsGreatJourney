@@ -2,10 +2,11 @@ require "pieces"
 require "map"
 testMap = require "testMap"
 
-
+Color_Background = {0,0,0, 255}
 Color_Chess1 = {245,222,179, 255}
 Color_Chess2 = {210,105,30, 255}
-Color_Highlight = {255,0,255,155}
+Color_Highlight = {255,0,255,177}
+Color_SelectedPiece = {0,0,0,155}
 
 --local selectedPiece 
 local tileset
@@ -93,19 +94,12 @@ function love.keypressed(key)
 end
 
 function love.draw()
-	love.graphics.setColor(0,111,111)
-	love.graphics.rectangle("fill",0,0,1000,1000)
+	love.graphics.clear(Color_Background)
 
 	DrawMap(currMap)
 	
 	local mouseX,mouseY  = love.mouse.getPosition()
 	love.graphics.setColor(0,0,0)
-	--if selectedPiece ~= nil then
-	--	love.graphics.print(selectedPiece.x,10,10)
-	--	love.graphics.print(selectedPiece.y,30,10)
-	--end
-	--love.graphics.print(math.floor(mouseX/32),10,40)
-	--love.graphics.print(math.floor(mouseY/32),30,40)
 	love.graphics.print(mapIndex,30,40)
 	
 end

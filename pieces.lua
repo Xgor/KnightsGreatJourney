@@ -168,7 +168,14 @@ end
 -- UNFINISHED
 function CanPawnMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	if CanPiecePassThroughPos(posX,posY) then
-		if posX == pieceX and pieceY-1 == posY then
+		local YDir
+		if isWhite then
+			YDir = pieceY-1
+		else
+			YDir = pieceY+1
+		end
+
+		if posX == pieceX and YDir == posY then
 			return true
 		end
 	end
