@@ -111,8 +111,8 @@ end
 function MovePieceToPos(pieceType,oldX,oldY,newX,newY)
 	local formerPiece = GetMapPiece(newX,newY)
 	local movingPiece = {}
-	SetMapPiece(newX,newY,pieceType)
 	SetMapPiece(oldX,oldY,0)
+	SetMapPiece(newX,newY,pieceType)
 	movingPiece.x = newX
 	movingPiece.y = newY
 	movingPiece.type = pieceType
@@ -124,13 +124,7 @@ function MovePieceToPos(pieceType,oldX,oldY,newX,newY)
 	return movingPiece
 end
 
-function ConveyorBelt(conveyorPiece,piece,x,y)
 
-	if conveyorPiece == PIECE_ARROW_UP then return MovePieceToPos(piece,x,y,x,y-1) 
-	elseif conveyorPiece == PIECE_ARROW_RIGHT then return MovePieceToPos(piece,x,y,x+1,y) 
-	elseif conveyorPiece == PIECE_ARROW_DOWN then return MovePieceToPos(piece,x,y,x,y+1) 
-	elseif conveyorPiece == PIECE_ARROW_LEFT then return MovePieceToPos(piece,x,y,x-1,y) end
-end
 
 function DrawHighlight(xPos,yPos, color) 
 	love.graphics.setColor(color)

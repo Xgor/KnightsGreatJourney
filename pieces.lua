@@ -198,3 +198,21 @@ function CanPawnMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	end
 	return false
 end
+
+function ConveyorBelt(conveyorPiece,piece,x,y)
+	local goalX = x
+	local goalY = y
+	if conveyorPiece == PIECE_ARROW_UP then goalY=y-1
+	elseif conveyorPiece == PIECE_ARROW_RIGHT then goalX=x+1
+	elseif conveyorPiece == PIECE_ARROW_DOWN then goalY=y+1
+	elseif conveyorPiece == PIECE_ARROW_LEFT then goalX=x-1 end
+	-- Checks so you can't move into the void 
+	-- There is two ways to make it work
+	-- Either make the piece stay or remove it "and make it fall into the void"
+	if CanMoveToPos(goalX,goalY) then
+	 	return MovePieceToPos(piece,x,y,goalX,goalY)
+	else
+		return MovePieceToPos(piece,x,y,x,y)
+	--	return MovePieceToPos(0,x,y,x,y)
+	end
+end

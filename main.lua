@@ -105,10 +105,5 @@ function love.draw()
 	local mouseMapX = math.floor(mouseX/32)
 	local mouseMapY = math.floor(mouseY/32)
 	love.graphics.setColor(255,255,255)
-	if IsBlackPiece( GetMapPiece(mouseMapX,mouseMapY) ) then
-		love.graphics.print("true",30,40)
-	else
-		love.graphics.print("false",30,40)
-	end
-	
+
 end
