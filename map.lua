@@ -20,7 +20,11 @@ function DidPlayerCompleteLevel()
 end
 
 function EndLevel()
-
+	currLevel = currLevel+1
+	if currLevel == 2 then loadMap(testMap2) 
+	elseif currLevel == 3 then loadMap(testMap3)
+	elseif currLevel == 4 then loadMap(testMap4)
+	end
 end
 
 function GetMapPiece(x,y)
@@ -59,17 +63,54 @@ function EnemyTurn()
 	local currMapPiece
 	for x = 0, roomWidth-1 do
 		for y = 0, roomHeight-1 do
+
 			currMapPiece = GetMapPiece(x,y)
 			if IsBlackPiece(currMapPiece) then
-
+				if currMapPiece == PIECE_BLACK_KNIGHT then 
+					if CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,false) then
+						MovePieceToPos(currMapPiece,selectedPiece.x,selectedPiece.y)
+					end
+				elseif selectedPiece.type == PIECE_BLACK_KING then 
+					if CanKingMoveToPos(x,y,selectedPiece.x,selectedPiece.y,false) then
+						MovePieceToPos(currMapPiece,selectedPiece.x,selectedPiece.y)
+					end
+				elseif selectedPiece.type == PIECE_BLACK_QUEEN then 
+					if CanQueenMoveToPos(x,y,selectedPiece.x,selectedPiece.y,false) then
+						MovePieceToPos(currMapPiece,selectedPiece.x,selectedPiece.y)
+					end
+				elseif selectedPiece.type == PIECE_BLACK_BISHOP then 
+					if CanBishopMoveToPos(x,y,selectedPiece.x,selectedPiece.y,false) then
+						MovePieceToPos(currMapPiece,selectedPiece.x,selectedPiece.y)
+					end
+				elseif selectedPiece.type == PIECE_BLACK_ROOK then 
+					if CanRookMoveToPos(x,y,selectedPiece.x,selectedPiece.y,false) then
+						MovePieceToPos(currMapPiece,selectedPiece.x,selectedPiece.y)
+					end
+				elseif selectedPiece.type == PIECE_BLACK_PAWN then 
+					if CanPawnMoveToPos(x,y,selectedPiece.x,selectedPiece.y,false) then
+						MovePieceToPos(currMapPiece,selectedPiece.x,selectedPiece.y)
+					end
+				end
 			end
 		end
 	end
 end
 
-function MovePieceToPos(piece,x,y)
+function PlayerMovePieceToPos(piece,x,y)
 	NewField()
 	mapIndex = mapIndex+1
+	SetMapPiece(x,y,piece.type)
+	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
+	selectedPiece.x = x
+	selectedPiece.y = y
+
+	if DidPlayerCompleteLevel() then
+		EndLevel()
+	end
+--	EnemyTurn()
+end
+
+function MovePieceToPos(piece,x,y)
 	SetMapPiece(x,y,piece.type)
 	SetMapPiece(selectedPiece.x,selectedPiece.y,0)
 	selectedPiece.x = x
@@ -117,29 +158,28 @@ function DrawMap(map)
 
 				if selectedPiece ~= nil then
 
-					if selectedPiece.type == PIECE_WHITE_KNIGHT and 
-					CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then 
-						if CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then
+					if selectedPiece.type == PIECE_WHITE_KNIGHT then 
+						if CanHorseMoveToPos(x,y,selectedPiece.x,selectedPiece.y,true) then
 							DrawHighlight(x,y,Color_Highlight)
 						end
 					elseif selectedPiece.type == PIECE_WHITE_KING then 
-						if CanKingMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then
+						if CanKingMoveToPos(x,y,selectedPiece.x,selectedPiece.y,true) then
 							DrawHighlight(x,y,Color_Highlight)
 						end
 					elseif selectedPiece.type == PIECE_WHITE_QUEEN then 
-						if CanQueenMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then
+						if CanQueenMoveToPos(x,y,selectedPiece.x,selectedPiece.y,true) then
 							DrawHighlight(x,y,Color_Highlight)
 						end
 					elseif selectedPiece.type == PIECE_WHITE_BISHOP then 
-						if CanBishopMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then
+						if CanBishopMoveToPos(x,y,selectedPiece.x,selectedPiece.y,true) then
 							DrawHighlight(x,y,Color_Highlight)
 						end
 					elseif selectedPiece.type == PIECE_WHITE_ROOK then 
-						if CanRookMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then
+						if CanRookMoveToPos(x,y,selectedPiece.x,selectedPiece.y,true) then
 							DrawHighlight(x,y,Color_Highlight)
 						end
 					elseif selectedPiece.type == PIECE_WHITE_PAWN then 
-						if CanPawnMoveToPos(x,y,selectedPiece.x,selectedPiece.y,GetCurrMap()) then
+						if CanPawnMoveToPos(x,y,selectedPiece.x,selectedPiece.y,true) then
 							DrawHighlight(x,y,Color_Highlight)
 						end
 					end

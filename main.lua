@@ -15,6 +15,7 @@ Color_SelectedPiece = {0,0,0,155}
 local tileset
 function love.load()
 	tileset = love.graphics.newImage("gfx/Tileset.png")
+	currLevel = 1
 	-- Load map
 	loadMap(testMap)
 end
@@ -32,42 +33,42 @@ function love.mousepressed( mouseX, mouseY, button, istouch )
 		if selectedPiece.type == PIECE_WHITE_KNIGHT then 
 			if CanHorseMoveToPos( GridPosX,GridPosY,
 			selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil 
 			end
 		elseif selectedPiece.type == PIECE_WHITE_KING then 
 			if CanKingMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil 
 			end
 		elseif selectedPiece.type == PIECE_WHITE_QUEEN then 
 			if CanQueenMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				selectedPiece = PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil 
 			end
 		elseif selectedPiece.type == PIECE_WHITE_BISHOP then 
 			if CanBishopMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil
 			end
 		elseif selectedPiece.type == PIECE_WHITE_ROOK then 
 			if CanRookMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil
 			end
 		elseif selectedPiece.type == PIECE_WHITE_PAWN then 
 			if CanPawnMoveToPos( GridPosX,GridPosY,
 				selectedPiece.x ,selectedPiece.y ,GetCurrMap()) then
-				selectedPiece = MovePieceToPos(selectedPiece,GridPosX,GridPosY)
+				PlayerMovePieceToPos(selectedPiece,GridPosX,GridPosY)
 			else
 				selectedPiece = nil
 			end
