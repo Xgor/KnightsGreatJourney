@@ -25,6 +25,7 @@ function IsWhitePiece(piece)
 end
 
 function IsBlackPiece(piece)
+
 	return PIECE_BLACK_KING <= piece
 end
 
@@ -59,20 +60,22 @@ end
 function CanBlackPieceMoveToPos(posX,posY)
 	local goalPiece = GetMapPiece(posX,posY)
 
+	print(goalPiece)
+
 	return CanMoveToPos(posX,posY) and not IsBlackPiece(goalPiece)
 end
 
 
 
-function CanHorseMoveToPos(posX,posY,horseX,horseY,isWhite)
+function CanHorseMoveToPos(posX,posY,pieceX,pieceY,isWhite)
 	local dist
 
 	
 	if CanPieceMoveToPos(posX,posY,isWhite) then
 
-		if posX ~= horseX and posY ~= horseY then
-			dist = math.abs( posX-horseX)
-			dist = dist + math.abs( posY-horseY)
+		if posX ~= pieceX and posY ~= pieceY then
+			dist = math.abs( posX-pieceX)
+			dist = dist + math.abs( posY-pieceY)
 			if(dist == 3) then
 				return true
 			end
@@ -81,9 +84,11 @@ function CanHorseMoveToPos(posX,posY,horseX,horseY,isWhite)
 	return false
 end
 
-function CanKingMoveToPos(posX,posY,kingX,kingY,isWhite)
+function CanKingMoveToPos(posX,posY,pieceX,pieceY,isWhite)
+
 	if CanPieceMoveToPos(posX,posY,isWhite) then
-		if math.abs(posX-kingX) <2 and math.abs(posY-kingY) <2 then
+		print("Sey")
+		if math.abs(posX-pieceX) <2 and math.abs(posY-pieceY) <2 then
 			return true
 		end
 	end
