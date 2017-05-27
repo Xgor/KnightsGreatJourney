@@ -1,9 +1,21 @@
 require "pieces"
 require "map"
-testMap = require "testMap"
-testMap2 = require "testMap2"
-testMap3 = require "testMap3"
-testMap4 = require "testMap4"
+testMap = require "Levels.Level1"
+testMap2 = require "Levels.Level2"
+testMap3 = require "Levels.Level3"
+testMap4 = require "Levels.Level4"
+testMap5 = require "Levels.Level5"
+testMap6 = require "Levels.Level6"
+testMap7 = require "Levels.Level7"
+testMap8 = require "Levels.Level8"
+testMap8 = require "Levels.Level9"
+endMap = require "TestMap"
+
+--testMap = require "Levels/Level5"
+--testMap2 = require "Levels/Level2"
+--testMap3 = require "Levels/Level3"
+--testMap4 = require "Levels/Level4"
+--endMap = require "Levels/TestLevel"
 
 Color_Background = {0,0,0, 255}
 Color_Chess1 = {245,222,179, 255}
@@ -93,6 +105,9 @@ function love.keypressed(key)
 	end
 	if key == "r" then
 		Reset()
+	end
+	if key == "n" then
+		EndLevel()
 	end
 end
 

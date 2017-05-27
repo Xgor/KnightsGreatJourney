@@ -25,6 +25,11 @@ function EndLevel()
 	if currLevel == 2 then loadMap(testMap2) 
 	elseif currLevel == 3 then loadMap(testMap3)
 	elseif currLevel == 4 then loadMap(testMap4)
+	elseif currLevel == 5 then loadMap(testMap5)
+	elseif currLevel == 6 then loadMap(testMap6)
+	elseif currLevel == 7 then loadMap(testMap7)
+	elseif currLevel == 8 then loadMap(testMap8)
+	elseif currLevel == 9 then loadMap(testMap9)
 	end
 end
 
