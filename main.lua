@@ -9,7 +9,7 @@ testMap6 = require "Levels.Level6"
 testMap7 = require "Levels.Level7"
 testMap8 = require "Levels.Level8"
 testMap8 = require "Levels.Level9"
-endMap = require "TestMap"
+endMap = require "Levels.TestMap"
 
 --testMap = require "Levels/Level5"
 --testMap2 = require "Levels/Level2"
